@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>🎂 සුභ උපන්දිනයක් මල්ලි 💖</title>
+  <!-- Canvas Confetti Library for rainbow confetti & hearts -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(145deg, #b3e0ff 0%, #d4f0ff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* Main card - mobile friendly */
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 48px;
+      box-shadow: 0 30px 50px rgba(0, 100, 150, 0.25);
+      padding: 24px 20px 32px;
+      text-align: center;
+      position: relative;
+      transition: all 0.4s ease;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      z-index: 2;
+    }
+
+    /* Bunny & banner area */
+    .bunny-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .bunny {
+      font-size: 80px;
+      filter: drop-shadow(0 12px 12px rgba(0,0,0,0.1));
+      transition: transform 0.3s;
+    }
+
+    .clickable-banner {
+      background: #ffffffdd;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 2px solid white;
+      border-radius: 60px;
+      padding: 14px 28px;
+      margin: 8px 0 12px;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #0369a1;
+      box-shadow: 0 8px 18px rgba(0,140,200,0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: linear-gradient(135deg, #e0f2fe, #ffffff);
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 2px solid #7ac7ff;
+    }
+
+    .clickable-banner:active {
+      transform: scale(0.95);
+      background: #b6e2ff;
+    }
+
+    .present-section {
+      margin: 10px 0 5px;
+    }
+
+    .present-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0c4a6e;
+      background: #ffffffb3;
+      display: inline-block;
+      padding: 8px 24px;
+      border-radius: 30px;
+      margin-bottom: 8px;
+      backdrop-filter: blur(5px);
+    }
+
+    .gift-box {
+      font-size: 70px;
+      cursor: pointer;
+      transition: 0.3s;
+      filter: drop-shadow(0 8px 10px rgba(0,0,0,0.15));
+    }
+    .gift-box:active {
+      transform: scale(0.9);
+    }
+
+    /* Cake area (hidden initially) */
+    .cake-hidden {
+      display: none;
+    }
+    .cake-visible {
+      display: block;
+      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .cake-container {
+      background: rgba(255,255,250,0.8);
+      backdrop-filter: blur(20px);
+      border-radius: 50px;
+      padding: 20px 10px;
+      margin: 12px 0;
+      border: 2px solid white;
+    }
+
+    .cake {
+      font-size: 90px;
+      line-height: 1;
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .candles {
+      font-size: 28px;
+      letter-spacing: 4px;
+    }
+
+    .cut-instruction {
+      background: #e0f2fe;
+      border-radius: 30px;
+      padding: 10px 16px;
+      font-weight: 600;
+      color: #075985;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      border: 2px dashed #38bdf8;
+      transition: 0.2s;
+    }
+    .cut-instruction:active {
+      background: #bae6fd;
+      transform: scale(0.96);
+    }
+
+    .triangle-piece {
+      font-size: 38px;
+      margin-left: 5px;
+    }
+
+    /* Letter card after cut */
+    .letter-card {
+      background: #f0f9ff;
+      border-radius: 40px;
+      padding: 20px 16px;
+      margin-top: 18px;
+      border: 2px solid white;
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 15px 25px rgba(0,100,140,0.2);
+      text-align: left;
+      font-size: 0.95rem;
+      color: #0b3b5c;
+      line-height: 1.7;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .next-btn {
+      background: #0284c7;
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 14px 30px;
+      border-radius: 50px;
+      margin-top: 20px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      background: linear-gradient(135deg, #0ea5e9, #0369a1);
+      box-shadow: 0 8px 18px #0284c766;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 2px solid white;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .next-btn:active {
+      transform: scale(0.95);
+      background: #075985;
+    }
+
+    .hug-scene {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .characters {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 70px;
+      transition: all 0.4s;
+    }
+
+    .girl {
+      animation: floatGirl 2s infinite ease-in-out;
+    }
+    .boy {
+      animation: floatBoy 2s infinite ease-in-out;
+    }
+
+    @keyframes floatGirl {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes floatBoy {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .hug-message {
+      font-weight: 600;
+      color: #075985;
+      margin: 8px 0;
+      background: #ffffffcc;
+      padding: 6px 18px;
+      border-radius: 20px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* floating hearts & balloons globally */
+    .floating-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    @media (max-width: 380px) {
+      .bunny { font-size: 65px; }
+      .gift-box { font-size: 60px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating hearts/balloons container (dynamic) -->
+  <div id="floating-container" class="floating-elements"></div>
+
+  <div class="container" id="mainContainer">
+    <!-- Bunny & clickable banner -->
+    <div class="bunny-section">
+      <div class="bunny">🐰</div>
+      <div class="clickable-banner" id="readyBanner">
+        <span>🎈</span> Are you ready to go? <span>🎈</span>
+      </div>
+    </div>
+
+    <!-- Present section (visible initially) -->
+    <div id="presentSection" class="present-section">
+      <div class="present-text">🎁 see the surprise inside</div>
+      <div class="gift-box" id="giftBox">🎁</div>
+    </div>
+
+    <!-- Cake & cut area (hidden until gift click) -->
+    <div id="cakeSection" class="cake-hidden">
+      <div class="cake-container">
+        <div class="cake">
+          <span>🎂</span>
+        </div>
+        <div class="candles">🕯️🔥🕯️</div>
+        <div style="font-weight:600; color:#0369a1;">Three-layer sky blue & peach delight</div>
+        <div class="cut-instruction" id="cutCakeBtn">
+          <span>🔪 Cut a slice</span> <span class="triangle-piece">▶️🍰</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Letter & next button (hidden until cut) -->
+    <div id="letterSection" class="hidden">
+      <div class="letter-card">
+        🎂💖 සුභ උපන්දිනයක් වේවා මල්ලි 🎂💖<br><br>
+        ඔයා මට යාළුවෙක් විතරක් නෙවෙයි මල්ලි …..  මන් ගැන ගෙදර අයට වඩා දන්නව මල්ලි , ඕනෙම  දෙයක් කියන්න පුළුවන් මල්ලි එක්ක.ඒ වගේම මගේ ජීවිතේ ඔයා වගේ කෙනෙක් ඉන්න එක ගැන මම ඇත්තටම වාසනාවන්තයි 💖<br><br>
+        මා වෙනුවෙන් හැමදාම ඉන්නවට, මට අඬන්න හිතෙනකොට මාව හිනස්සන්න, වෙන කවුරුත් නොකරන විදිහට බලාගන්නවට ස්තූතියි 🤍<br><br>
+        ඔයාගේ ජීවිතේ නිමක් නැති සතුටකින්, සාර්ථකත්වයකින්, ආදරයකින්, ඔයා හඹා යන හැම හීනයක්ම සැබෑ වෙයි කියලා මම ප්‍රාර්ථනා කරනවා 🌟🎂 මේ ලෝකේ තියෙන හැම ලස්සන දෙයක්ම ඔයාට ලැබෙන්න ඕනෙ<br><br>
+        මොනවා උනත්, මම හැමදාම ඔයා ළඟ ඉන්නවා... අද, හෙට, හැමදාටම 🥺💞
+      </div>
+      <button class="next-btn" id="nextToHugBtn">Next 💙</button>
+    </div>
+
+    <!-- Hug scene (hidden) -->
+    <div id="hugSection" class="hidden hug-scene">
+      <div class="characters">
+        <span class="girl">👧🏻</span>
+        <span style="font-size:50px; margin:0 2px;">💙</span>
+        <span class="boy">👦🏻</span>
+      </div>
+      <div class="hug-message">🤗 Big hug for my best friend! 🤗</div>
+      <div style="color:#0369a1; font-weight:500;">You're the best, මල්ලි 💙</div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // DOM elements
+      const readyBanner = document.getElementById('readyBanner');
+      const giftBox = document.getElementById('giftBox');
+      const presentSection = document.getElementById('presentSection');
+      const cakeSection = document.getElementById('cakeSection');
+      const cutCakeBtn = document.getElementById('cutCakeBtn');
+      const letterSection = document.getElementById('letterSection');
+      const nextToHugBtn = document.getElementById('nextToHugBtn');
+      const hugSection = document.getElementById('hugSection');
+      const floatingContainer = document.getElementById('floating-container');
+
+      // State to track if banner triggered confetti already (we can allow multiple)
+      let bannerClicked = false;
+
+      // ----- 🎉 Confetti with rainbow & hearts -----
+      function launchRainbowHeartConfetti() {
+        // Rainbow confetti burst
+        const colors = ['#ff0000', '#ff7700', '#ffff00', '#00ff00', '#0077ff', '#8a2be2'];
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.5, x: 0.5 },
+          colors: colors,
+          startVelocity: 40,
+          gravity: 0.6,
+          scalar: 1.2,
+          shapes: ['circle', 'square']
+        });
+        // Little red hearts using confetti shapes
+        confetti({
+          particleCount: 60,
+          spread: 100,
+          origin: { y: 0.5, x: 0.5 },
+          colors: ['#ff4d6d', '#ff0a33', '#ffb3c6'],
+          shapes: ['heart'],
+          scalar: 2.2,
+          drift: 0.5,
+          ticks: 200
+        });
+        // additional soft hearts
+        setTimeout(() => {
+          confetti({
+            particleCount: 40,
+            spread: 70,
+            origin: { y: 0.4, x: 0.5 },
+            colors: ['#ff4d6d'],
+            shapes: ['heart'],
+            scalar: 1.8,
+          });
+        }, 150);
+      }
+
+      // continuous floating hearts and balloons
+      function createFloatingElement(type = 'heart') {
+        const el = document.createElement('div');
+        el.textContent = type === 'heart' ? '💖' : '🎈';
+        el.style.position = 'absolute';
+        el.style.left = Math.random() * 100 + '%';
+        el.style.bottom = '-40px';
+        el.style.fontSize = (Math.random() * 20 + 18) + 'px';
+        el.style.opacity = '0.9';
+        el.style.animation = `floatUp ${Math.random() * 4 + 4}s linear forwards`;
+        el.style.pointerEvents = 'none';
+        el.style.zIndex = '20';
+        floatingContainer.appendChild(el);
+
+        // Remove after animation
+        setTimeout(() => {
+          if (el && el.parentNode) el.remove();
+        }, 7000);
+      }
+
+      // Insert keyframe for float up
+      const styleSheet = document.createElement("style");
+      styleSheet.textContent = `
+        @keyframes floatUp {
+          0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(styleSheet);
+
+      // Start continuous floating after interaction (or on load gentle)
+      function startContinuousFloating() {
+        setInterval(() => {
+          const type = Math.random() < 0.6 ? 'heart' : 'balloon';
+          createFloatingElement(type);
+        }, 700);
+      }
+
+      // initial gentle floating
+      window.addEventListener('load', () => {
+        // few initial hearts
+        for(let i=0; i<4; i++) {
+          setTimeout(() => createFloatingElement('heart'), i*200);
+        }
+        startContinuousFloating();
+      });
+
+      // ----- Banner click: confetti + hearts -----
+      readyBanner.addEventListener('click', () => {
+        launchRainbowHeartConfetti();
+        // extra hearts
+        for(let i=0;i<6;i++) {
+          setTimeout(() => createFloatingElement('heart'), i*60);
+        }
+        bannerClicked = true;
+      });
+
+      // ----- Gift click: show cake with candles -----
+      giftBox.addEventListener('click', () => {
+        // Hide present section and show cake
+        presentSection.classList.add('hidden');
+        cakeSection.classList.remove('cake-hidden');
+        cakeSection.classList.add('cake-visible');
+        
+        // also pop little confetti
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.6 },
+          colors: ['#a5d8ff', '#ffb3ba', '#ffffba'],
+        });
+        createFloatingElement('heart');
+      });
+
+      // ----- Cut cake: show letter & keep cake visible? we transition to letter-----
+      cutCakeBtn.addEventListener('click', () => {
+        // Cake remains but we show letter section and hide cut instruction maybe?
+        // According to requirement: after cut, letter appears. We'll keep cake visible above letter.
+        // Make cake section stay but disable cut button.
+        cutCakeBtn.style.pointerEvents = 'none';
+        cutCakeBtn.style.opacity = '0.6';
+        cutCakeBtn.innerHTML = '✅ Slice cut! 🍰';
+        
+        // Show letter section
+        letterSection.classList.remove('hidden');
+        
+        // confetti celebration
+        launchRainbowHeartConfetti();
+        // additional floating hearts
+        for(let i=0;i<8;i++) {
+          setTimeout(() => createFloatingElement('heart'), i*70);
+        }
+        // scroll to letter a bit
+        letterSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+
+      // ----- Next button: show hug scene -----
+      nextToHugBtn.addEventListener('click', () => {
+        // Hide letter section? or keep? We'll show hug section below.
+        hugSection.classList.remove('hidden');
+        // scroll to hug
+        hugSection.scrollIntoView({ behavior: 'smooth' });
+        
+        // hearts and balloons
+        for(let i=0;i<5;i++) {
+          setTimeout(() => {
+            createFloatingElement('heart');
+            createFloatingElement('balloon');
+          }, i*100);
+        }
+        confetti({
+          particleCount: 70,
+          spread: 80,
+          origin: { y: 0.5 },
+          colors: ['#38bdf8', '#f472b6', '#fbbf24'],
+        });
+      });
+
+      // Additional: if someone clicks banner again, still works
+      // Ensure cake hidden initially (class already)
+      // Mobile friendly adjustments done.
+
+      // Also allow restart? Not necessary.
+    })();
+  </script>
+</body>
+</html>
